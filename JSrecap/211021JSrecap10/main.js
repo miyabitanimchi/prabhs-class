@@ -3,25 +3,33 @@ const cardsContainer = document.getElementById("cardsContainer");
 const fetchAPI = async () => {
   try {
     const response = await axios.get("https://api.github.com/repos/miyabitanimchi/React-E-Commerce-App/issues");
-    console.log(response.data);
-    createElements(response.data);
+    const data = response.data;
+    console.log(data);
+    createElements(data);
   } catch (err) {
     console.log(err);
   }
 }
 
-const createLabels = (labelsArr) => {
-  labelsArr.map((label) => {
+const createLabels = (labelsArr, card, parentIndex) => {
+  const labelsWrapper = document.createElement("div");
+  labelsWrapper.classList.add("labels-wrapper");
+  labelsArr.map((label, index) => {
     const labelDiv = document.createElement("div");
-    console.log(label.name)
+    labelDiv.setAttribute("id", `${parentIndex}-${index}-${label.name}`);
     labelDiv.innerText = label.name;
     labelDiv.classList.add("label");
-    cardsContainer.appendChild(labelDiv);
+
+    // document.getElementById(`${parentIndex}-${index}-${label.name}`).style.backgroundColor = label.color;
+    // labelDiv.innerHTML = `<div class="label" style="background-color:${label.color}>${label.name}</div>`;
+    labelsWrapper.appendChild(labelDiv);
+
   });
+  card.appendChild(labelsWrapper);
 }
 
 const createElements = (data) => {
-  data.map((issue) => {
+  data.map((issue, index) => {
     const card = document.createElement("div");
     card.classList.add("card")
     const iconAndTitleWrapper = document.createElement("div");
@@ -37,7 +45,7 @@ const createElements = (data) => {
     cardsContainer.appendChild(card);
 
     if (issue.labels !== 0) {
-      createLabels(issue.labels);
+      createLabels(issue.labels, card, index);
     }
   })
 }
