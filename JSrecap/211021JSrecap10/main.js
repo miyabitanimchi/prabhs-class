@@ -1,4 +1,7 @@
 const cardsContainer = document.getElementById("cardsContainer");
+const searchInput = document.getElementById("searchInput");
+let idAndColorObj = {};
+let issueData;
 
 const fetchAPI = async () => {
   try {
@@ -6,8 +9,24 @@ const fetchAPI = async () => {
     const data = response.data;
     console.log(data);
     createElements(data);
+    issueData = data;
   } catch (err) {
     console.log(err);
+  }
+}
+
+
+
+const addStyleforLabels = (idColorObj) => {
+  if (idColorObj !== {}) {
+    const idArr = Object.keys(idColorObj);
+    console.log(idArr);
+    for (let i = 0; i < idArr.length; i++) {
+      document.getElementById(idArr[i]).style.backgroundColor = `#${idColorObj[idArr[i]]}`;
+      if (idColorObj[idArr[i]] === "e4e669") {
+        document.getElementById(idArr[i]).style.color = "#000000";
+      }
+    }
   }
 }
 
@@ -19,27 +38,36 @@ const createLabels = (labelsArr, card, parentIndex) => {
     labelDiv.setAttribute("id", `${parentIndex}-${index}-${label.name}`);
     labelDiv.innerText = label.name;
     labelDiv.classList.add("label");
-
-    // document.getElementById(`${parentIndex}-${index}-${label.name}`).style.backgroundColor = label.color;
-    // labelDiv.innerHTML = `<div class="label" style="background-color:${label.color}>${label.name}</div>`;
+    idAndColorObj[`${parentIndex}-${index}-${label.name}`] = label.color;
     labelsWrapper.appendChild(labelDiv);
-
   });
   card.appendChild(labelsWrapper);
 }
 
 const createElements = (data) => {
+  if (data.length === 0) {
+    console.log("no result");
+    cardsContainer.innerHTML = `<p class="no-result">No Result</p>`;
+    return;
+  }
   data.map((issue, index) => {
-    const card = document.createElement("div");
+    const card = document.createElement("a");
     card.classList.add("card")
+    card.href = issue.html_url;
+    card.target = "_blank";
     const iconAndTitleWrapper = document.createElement("div");
     iconAndTitleWrapper.classList.add("icon-and-title-wrapper");
-    const iconDiv = document.createElement("div");
-    iconDiv.classList.add("icon")
-    iconDiv.innerHTML = `<i class="fas fa-user-circle"></i>`;
+    const linkForIcon = document.createElement("a");
+    linkForIcon.classList.add("icon-link")
+    linkForIcon.href = `https://github.com/${issue.user.login}`;
+    linkForIcon.target = "_blank";
+    const icon = document.createElement("img");
+    icon.classList.add("icon")
+    icon.src = issue.user.avatar_url;
     const titleP = document.createElement("p");
-    titleP.innerHTML = `<span><a href=${issue.html_url} target="_blank">${issue.number}</a></span>${issue.title}`;
-    iconAndTitleWrapper.appendChild(iconDiv);
+    titleP.innerHTML = `<span>#${issue.number}</span>${issue.title}`;
+    linkForIcon.appendChild(icon)
+    iconAndTitleWrapper.appendChild(linkForIcon);
     iconAndTitleWrapper.appendChild(titleP)
     card.appendChild(iconAndTitleWrapper);
     cardsContainer.appendChild(card);
@@ -48,6 +76,29 @@ const createElements = (data) => {
       createLabels(issue.labels, card, index);
     }
   })
+  addStyleforLabels(idAndColorObj);
 }
 
 fetchAPI();
+
+/* ***************** Search function ******************** */
+
+const showResult = (data) => {
+  const resultArr = data.filter(
+    (issue) =>
+      issue.title.toLowerCase().search(searchInput.value.toLowerCase()) !== -1
+  );
+  cardsContainer.innerHTML = "";
+  createElements(resultArr);
+}
+
+document.getElementById("submitBtn").addEventListener("click", (e) => {
+  e.preventDefault();
+  showResult(issueData);
+});
+searchInput.addEventListener("keypress", (e) => {
+  if (e.keyCode == 13) {
+    e.preventDefault();
+    showResult(issueData);
+  }
+});
