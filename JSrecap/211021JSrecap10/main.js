@@ -1,3 +1,4 @@
+/* 10212021 / Miyabi Tanimichi / JSrecap 10 */
 const cardsContainer = document.getElementById("cardsContainer");
 const searchInput = document.getElementById("searchInput");
 let idAndColorObj = {};
