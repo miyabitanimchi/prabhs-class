@@ -3,6 +3,7 @@ const searchInput = document.getElementById("searchInput");
 let idAndColorObj = {};
 let issueData;
 
+// call gitHub api for the issues
 const fetchAPI = async () => {
   try {
     const response = await axios.get("https://api.github.com/repos/miyabitanimchi/React-E-Commerce-App/issues");
@@ -15,12 +16,10 @@ const fetchAPI = async () => {
   }
 }
 
-
-
+// add each color on each label
 const addStyleforLabels = (idColorObj) => {
   if (idColorObj !== {}) {
     const idArr = Object.keys(idColorObj);
-    console.log(idArr);
     for (let i = 0; i < idArr.length; i++) {
       document.getElementById(idArr[i]).style.backgroundColor = `#${idColorObj[idArr[i]]}`;
       if (idColorObj[idArr[i]] === "e4e669") {
@@ -30,6 +29,7 @@ const addStyleforLabels = (idColorObj) => {
   }
 }
 
+// create labels in each card
 const createLabels = (labelsArr, card, parentIndex) => {
   const labelsWrapper = document.createElement("div");
   labelsWrapper.classList.add("labels-wrapper");
@@ -44,7 +44,9 @@ const createLabels = (labelsArr, card, parentIndex) => {
   card.appendChild(labelsWrapper);
 }
 
+// create cards
 const createElements = (data) => {
+  idAndColorObj = {};
   if (data.length === 0) {
     console.log("no result");
     cardsContainer.innerHTML = `<p class="no-result">No Result</p>`;
@@ -78,12 +80,14 @@ const createElements = (data) => {
   })
   addStyleforLabels(idAndColorObj);
 }
-
+// call api
 fetchAPI();
 
-/* ***************** Search function ******************** */
-
+/* ************************** Search function ************************** */
 const showResult = (data) => {
+  if (searchInput.value === "") {
+    createElements(data)
+  }
   const resultArr = data.filter(
     (issue) =>
       issue.title.toLowerCase().search(searchInput.value.toLowerCase()) !== -1
