@@ -1,15 +1,36 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../store/actions';
+import { Link } from 'react-router-dom';
 
 const Form = () => {
   const [name, setName] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState('');
+  const userInfo = useSelector((state) => state.userInfo);
+  const dispatch = useDispatch();
+  console.log(userInfo);
 
   const submitForm = (e) => {
     e.preventDefault();
+    const userInfo = {
+      name,
+      yearsOfExperience,
+    };
+    dispatch(setUser(userInfo));
   };
+
+  // const handleQuizOnClick = (e) => {
+  //   e.preventDefault();
+  //   if (e.target.value === 'JavaScript') {
+  //     navigate('/js-quiz');
+  //   } else if (e.target.value === 'React.js') {
+  //     navigate('/react-quiz');
+  //   }
+  // };
 
   return (
     <section>
+      <h2>Simple Tech Quiz</h2>
       <div>
         <label htmlFor="">Name: </label>
         <input
@@ -36,6 +57,18 @@ const Form = () => {
         </select>
       </div>
       <input type="submit" value="Submit" onClick={(e) => submitForm(e)} />
+      {userInfo.name.length !== 0 && (
+        <>
+          <h2>Hello {userInfo.name}!</h2>
+          <h3>Please choose a quiz below </h3>
+          <Link to="/js-quiz">
+            <button value="JavaScript">JavaScript Quiz</button>
+          </Link>
+          <Link to="/react-quiz">
+            <button value="React.js">React.js Quiz</button>
+          </Link>
+        </>
+      )}
     </section>
   );
 };

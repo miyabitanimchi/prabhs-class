@@ -1,13 +1,17 @@
 import { SET_USER, ADD_ANSWER } from './actions';
 
-const userReducer = (state = {}, action) => {
+const userReducer = (
+  state = { userInfo: { name: '', yearsOfExperience: '' }, answers: {} },
+  action
+) => {
   switch (action.type) {
     case SET_USER:
-      return action.users;
+      return { ...state, userInfo: action.userInfo };
     case ADD_ANSWER:
-      return { ...state, answers: action.answers };
+      const answer = action.answer;
+      return { ...state, answers: { ...state.answers, ...answer } };
     default:
-      return;
+      return state;
   }
 };
 

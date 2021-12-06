@@ -1,12 +1,18 @@
 import React from 'react';
 import Form from './components/Form';
+import JsQuiz from './components/JsQuiz';
+import ReactQuiz from './components/ReactQuiz';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <>
-      <h1>Hello</h1>
-      <Form />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Form />} />
+        <Route path="/js-quiz" element={<JsQuiz />} />
+        <Route path="/react-quiz" element={<ReactQuiz />} />
+      </Routes>
+    </Router>
   );
 }
 

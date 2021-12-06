@@ -1,12 +1,12 @@
-const SET_USER = 'SET_USER';
-const ADD_ANSWER = 'ADD_ANSWER';
+export const SET_USER = 'SET_USER';
+export const ADD_ANSWER = 'ADD_ANSWER';
 
-export const setUser = () => ({
+export const setUser = (userInfo) => ({
   type: SET_USER,
-  // payload: userList,
+  userInfo,
 });
 
 export const addAnswer = (answer) => ({
   type: ADD_ANSWER,
-  payload: answer,
+  answer,
 });
