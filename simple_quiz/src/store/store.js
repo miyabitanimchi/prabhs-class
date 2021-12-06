@@ -1,6 +1,13 @@
-import { createStore } from 'redux';
-import userReducer from './reducer';
+import { createStore, combineReducers } from 'redux';
+import userReducer from '../reducers/userReducer';
+import reactAnswersReducer from '../reducers/reactAnswersReducer';
 
-const store = createStore(userReducer);
-
-export default store;
+export default () => {
+  const store = createStore(
+    combineReducers({
+      userInfo: userReducer,
+      reactAnswers: reactAnswersReducer,
+    })
+  );
+  return store;
+};

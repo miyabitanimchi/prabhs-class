@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '../store/actions';
+import { setUser } from '../actions/actions';
 import { Link } from 'react-router-dom';
 
 const Form = () => {
   const [name, setName] = useState('');
-  const [yearsOfExperience, setYearsOfExperience] = useState('');
+  const [yearsOfExperience, setYearsOfExperience] = useState('0-1');
   const userInfo = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
   console.log(userInfo);
@@ -18,15 +18,6 @@ const Form = () => {
     };
     dispatch(setUser(userInfo));
   };
-
-  // const handleQuizOnClick = (e) => {
-  //   e.preventDefault();
-  //   if (e.target.value === 'JavaScript') {
-  //     navigate('/js-quiz');
-  //   } else if (e.target.value === 'React.js') {
-  //     navigate('/react-quiz');
-  //   }
-  // };
 
   return (
     <section>
